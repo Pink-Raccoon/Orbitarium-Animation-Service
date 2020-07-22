@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -11,10 +12,18 @@ namespace WebApplication1.Controller
     public class CountriesController : ApiController
     {
         // GET api/<controller>
-        public string Get()
+        public string[] Get()
         {
-            PersistenceService p = new PersistenceService();
-            return p.ParseFiles();
+            
+            var appSettings = ConfigurationManager.AppSettings;
+            string result = appSettings["MyCustomSetting"] ?? "Not Found";
+            //return result;
+
+            CountryImportService s = new CountryImportService();
+            return s.ImportCountries();
+                
+            //PersistenceService p = new PersistenceService();
+            //return p.ParseFiles();
             //return new string[] { "value1", "value2" };
         }
 

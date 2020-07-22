@@ -5,9 +5,9 @@ using System.Web;
 
 namespace WebApplication1.Models
 {
-    public class Country
+    public class Coordinate
     {
-        public string Name { get; set; }
-        public float[] Path { get; set; }
+        public double lat { get; set; }
+        public double lng { get; set; }
     }
 }

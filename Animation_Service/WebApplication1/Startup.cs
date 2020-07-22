@@ -9,7 +9,7 @@ namespace WebApplication1
         public void Configuration(IAppBuilder app)
         {
             var config = new HttpConfiguration();
-
+            config.EnableCors();
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(

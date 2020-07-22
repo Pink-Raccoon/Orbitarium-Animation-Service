@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -10,12 +11,20 @@ namespace WebApplication1.Services
 {
     public class PersistenceService
     {
-        private static string FILE_PATH = "C:\\Users\\Remo Preuss\\Documents\\GitHub\\Orbitarium-Animation-Service\\Animation_Service\\WebApplication1\\Data\\";
-        private static string FILE_NAME = "gadm36_CHE_0";
 
-        public void SaveToFile (string content)
+        //@Preussmeister: comment out this line for your directory.
+        //private static string DATA_DIR = @"C:\Users\Remo Preuss\Documents\GitHub\Orbitarium-Animation-Service\Animation_Service\WebApplication1\Data";
+        private static string DATA_DIR = ConfigurationManager.AppSettings["MyCustomSetting"];
+        private static string COUNTRIES_SRC_FOLDER = "countries";
+        private static string ANIMATIONS_STORAGE_FOLDER = "json";
+        private static string FILE_NAME = "gadm36_CHE_0.kml";
+
+        public void SaveToFile (string path, string content)
         {
-            //Save content to file
+            FileInfo file = new FileInfo(path);
+            file.Directory.Create();
+            File.WriteAllText(path, content);
+            Console.WriteLine(path);
         }
 
         public void ReadFromFile()
@@ -24,7 +33,7 @@ namespace WebApplication1.Services
         }
 
         public string ParseFiles() {
-            var doc = XDocument.Load("" + FILE_PATH + "countries\\" +  FILE_NAME + ".kml");
+            var doc = XDocument.Load(Path.Combine(DATA_DIR, COUNTRIES_SRC_FOLDER, FILE_NAME));
             XNamespace ns = "http://www.opengis.net/kml/2.2";
 
             // get all outer boundaries. we don't care about the inner ones.
@@ -58,8 +67,14 @@ namespace WebApplication1.Services
             country.Add("name", countryName);
             country.Add("coordinates", countryCoordinates);
 
+            var destinationPath = Path.Combine(DATA_DIR, ANIMATIONS_STORAGE_FOLDER);
 
-            using (StreamWriter file = File.CreateText(@"" + FILE_PATH + "jsonData\\" + FILE_NAME + ".txt"))
+            if (!Directory.Exists(destinationPath))
+            {
+                Directory.CreateDirectory(destinationPath);
+            }
+
+            using (StreamWriter file = File.CreateText(Path.Combine(destinationPath, FILE_NAME + ".json")))
             {
                 JsonSerializer serializer = new JsonSerializer();
                 //serialize object directly into file stream
