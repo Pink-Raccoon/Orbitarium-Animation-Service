@@ -4,15 +4,18 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using WebApplication1.Services;
 
 namespace WebApplication1.Controller
 {
     public class CountriesController : ApiController
     {
         // GET api/<controller>
-        public IEnumerable<string> Get()
+        public string Get()
         {
-            return new string[] { "value1", "value2" };
+            PersistenceService p = new PersistenceService();
+            return p.ParseFiles();
+            //return new string[] { "value1", "value2" };
         }
 
         // GET api/<controller>/5
