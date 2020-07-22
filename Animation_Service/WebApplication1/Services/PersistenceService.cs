@@ -10,8 +10,8 @@ namespace WebApplication1.Services
 {
     public class PersistenceService
     {
-        private static string FILE_PATH = "C:\\Users\\Remo Preuss\\Documents\\GitHub\\Orbitarium-Animation-Service\\Animation_Service\\WebApplication1\\Data\\countries\\";
-        private static string FILE_NAME = "gadm36_CHE_0.kml";
+        private static string FILE_PATH = "C:\\Users\\Remo Preuss\\Documents\\GitHub\\Orbitarium-Animation-Service\\Animation_Service\\WebApplication1\\Data\\";
+        private static string FILE_NAME = "gadm36_CHE_0";
 
         public void SaveToFile (string content)
         {
@@ -24,11 +24,12 @@ namespace WebApplication1.Services
         }
 
         public string ParseFiles() {
-            var doc = XDocument.Load("" + FILE_PATH + FILE_NAME);
+            var doc = XDocument.Load("" + FILE_PATH + "countries\\" +  FILE_NAME + ".kml");
             XNamespace ns = "http://www.opengis.net/kml/2.2";
 
             // get all outer boundaries. we don't care about the inner ones.
             var outerBoundaries = doc.Descendants(ns + "outerBoundaryIs").ToList();
+            string countryName = doc.Descendants(ns + "SimpleData").ToList()[0].Value;
 
             List<string> coordList = new List<string>();
 
@@ -39,31 +40,33 @@ namespace WebApplication1.Services
 
             char[] spaceSeparator = { ' ' };
             char[] commaSeparator = { ',' };
-            /*foreach (string coords in coordList) {
+            List<List<Dictionary<string, double>>> countryCoordinates = new List<List<Dictionary<string, double>>>();
+            foreach (string coords in coordList) {
                 String[] latLongPairList = coords.Split(spaceSeparator, StringSplitOptions.RemoveEmptyEntries);
+                List<Dictionary<string, double>> coordPoints = new List<Dictionary<string, double>>();
                 foreach (string latLongPair in latLongPairList) {
                     String[] latLongValues = latLongPair.Split(commaSeparator, StringSplitOptions.RemoveEmptyEntries);
                     Dictionary<string, double> latLong = new Dictionary<string, double>();
                     latLong.Add("lng", Convert.ToDouble(latLongValues[0]));
                     latLong.Add("lat", Convert.ToDouble(latLongValues[1]));
+                    coordPoints.Add(latLong);
                 }
-            }*/
-
-            List<Dictionary<string, double>> coordPoints = new List<Dictionary<string, double>>();
-            String[] latLongPairList = coordList.First().Split(spaceSeparator, StringSplitOptions.RemoveEmptyEntries);
-            foreach (string latLongPair in latLongPairList)
-            {
-                String[] latLongValues = latLongPair.Split(commaSeparator, StringSplitOptions.RemoveEmptyEntries);
-                Dictionary<string, double> latLong = new Dictionary<string, double>();
-                latLong.Add("lng", Convert.ToDouble(latLongValues[0]));
-                latLong.Add("lat", Convert.ToDouble(latLongValues[1]));
-                coordPoints.Add(latLong);
+                countryCoordinates.Add(coordPoints);
             }
 
-            string jsonString;
-            jsonString = JsonConvert.SerializeObject(coordPoints);
-            Console.WriteLine(jsonString);
-            return jsonString;
+            Dictionary<string, Object> country = new Dictionary<string, Object>();
+            country.Add("name", countryName);
+            country.Add("coordinates", countryCoordinates);
+
+
+            using (StreamWriter file = File.CreateText(@"" + FILE_PATH + "jsonData\\" + FILE_NAME + ".txt"))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                //serialize object directly into file stream
+                serializer.Serialize(file, country);
+            }
+
+            return "";
         }
     }
 }
