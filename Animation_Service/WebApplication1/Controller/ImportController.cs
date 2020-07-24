@@ -29,6 +29,10 @@ namespace WebApplication1.Controller
             {
                 CountryImportService countryService = new CountryImportService();
                 countryService.ImportCountries();
+            } else if (value.Equals("coronaData"))
+            {
+                CoronaDataImportService coronaService = new CoronaDataImportService();
+                coronaService.ImportCoronaData();
             }
         }
 

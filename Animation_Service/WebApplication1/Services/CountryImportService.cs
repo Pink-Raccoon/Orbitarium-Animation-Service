@@ -14,12 +14,12 @@ namespace WebApplication1.Services
     {
         private PersistenceService persistence = new PersistenceService();
         private static string BASE_DIR = ConfigurationManager.AppSettings["BASE_DIR"]; 
-        private static string COUNTRIES_SRC_FOLDER = ConfigurationManager.AppSettings["COUNTRIES_SRC_FOLDER"];
-        private static string ANIMATIONS_STORAGE_FOLDER = ConfigurationManager.AppSettings["ANIMATIONS_STORAGE_FOLDER"];
+        private static string SRC_FOLDER = ConfigurationManager.AppSettings["SRC_FOLDER"];
+        private static string DATASTORE_FOLDER = ConfigurationManager.AppSettings["DATASTORE_FOLDER"];
 
         public string[] ImportCountries()
         {
-            var srcPath = Path.Combine(BASE_DIR, COUNTRIES_SRC_FOLDER);
+            var srcPath = Path.Combine(BASE_DIR, SRC_FOLDER, "countries");
             var files = Directory.GetFiles(srcPath);
             foreach(var file in files)
             {
@@ -76,7 +76,7 @@ namespace WebApplication1.Services
         private void PersistCountryModel(Country country)
         {
             var countryString = JsonConvert.SerializeObject(country, Formatting.None);
-            persistence.SaveToFile(Path.Combine(BASE_DIR, ANIMATIONS_STORAGE_FOLDER, "countries", country.Name + ".json"), countryString);
+            persistence.SaveToFile(Path.Combine(BASE_DIR, DATASTORE_FOLDER, "countries", country.Name + ".json"), countryString);
         }
     }
 
