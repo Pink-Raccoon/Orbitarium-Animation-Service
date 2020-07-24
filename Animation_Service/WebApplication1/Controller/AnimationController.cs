@@ -24,7 +24,7 @@ namespace WebApplication1.Controller
         public string Get(string name)
         {
             AnimationService a = new AnimationService();
-            return a.getDataFor(name);
+            return a.GetDataFor(name);
         }
 
         // POST api/<controller>

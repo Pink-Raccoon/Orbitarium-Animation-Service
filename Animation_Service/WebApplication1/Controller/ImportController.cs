@@ -23,17 +23,10 @@ namespace WebApplication1.Controller
         }
 
         // POST api/<controller>
-        public void Post([FromBody]string value)
+        public string[] Post([FromBody]string value)
         {
-            if (value.Equals("country"))
-            {
-                CountryImportService countryService = new CountryImportService();
-                countryService.ImportCountries();
-            } else if (value.Equals("coronaData"))
-            {
-                CoronaDataImportService coronaService = new CoronaDataImportService();
-                coronaService.ImportCoronaData();
-            }
+            ImportService import = new ImportService();
+            return import.ImportData(value);
         }
 
         // PUT api/<controller>/5

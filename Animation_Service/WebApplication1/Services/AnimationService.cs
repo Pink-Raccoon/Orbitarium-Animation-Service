@@ -29,7 +29,7 @@ namespace WebApplication1.Services
             return everyCountry;
         }
 
-        public string getDataFor(string name) {
+        public string GetDataFor(string name) {
             var charsToRemove = new string[] { "\\", "\""};
             foreach (var c in charsToRemove)
             {

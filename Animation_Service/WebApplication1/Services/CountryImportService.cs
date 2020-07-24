@@ -19,7 +19,7 @@ namespace WebApplication1.Services
 
         public string getCountryNames()
         {
-            var filePath = Path.Combine(BASE_DIR, ANIMATIONS_STORAGE_FOLDER, "countries", "allCountryNames.json");
+            var filePath = Path.Combine(BASE_DIR, DATASTORE_FOLDER, "countries", "allCountryNames.json");
             string names = File.ReadAllText(filePath);
             return names;
         }
