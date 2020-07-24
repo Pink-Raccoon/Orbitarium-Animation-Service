@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -19,10 +20,11 @@ namespace WebApplication1.Controller
             return animationService.GetAnimation();
         }
 
-        // GET api/<controller>/5
-        public string Get(int id)
+        // GET api/<controller>/zimbabwe
+        public string Get(string name)
         {
-            return "value";
+            AnimationService a = new AnimationService();
+            return a.getDataFor(name);
         }
 
         // POST api/<controller>

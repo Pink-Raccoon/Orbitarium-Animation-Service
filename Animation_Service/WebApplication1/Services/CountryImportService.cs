@@ -17,14 +17,24 @@ namespace WebApplication1.Services
         private static string SRC_FOLDER = ConfigurationManager.AppSettings["SRC_FOLDER"];
         private static string DATASTORE_FOLDER = ConfigurationManager.AppSettings["DATASTORE_FOLDER"];
 
+        public string getCountryNames()
+        {
+            var filePath = Path.Combine(BASE_DIR, ANIMATIONS_STORAGE_FOLDER, "countries", "allCountryNames.json");
+            string names = File.ReadAllText(filePath);
+            return names;
+        }
+
         public string[] ImportCountries()
         {
             var srcPath = Path.Combine(BASE_DIR, SRC_FOLDER, "countries");
             var files = Directory.GetFiles(srcPath);
-            foreach(var file in files)
+            //IList<Country> allCountries = new List<Country>();
+            foreach (var file in files)
             {
+                //allCountries.Add(ParseCountryModel(file));
                 ParseCountryModel(file);
             }
+            //PersistCountryModel(allCountries);
             return files;
         }
 
@@ -38,7 +48,7 @@ namespace WebApplication1.Services
             var countryName = doc.Descendants(ns + "SimpleData").ToList()[0].Value;
 
             List<string> paths = new List<string>();
-
+            
             // list with string for each collection of boarder points
             foreach (XElement elem in outerBoundaries)
             {
@@ -52,15 +62,20 @@ namespace WebApplication1.Services
             {
                 var coords = path.Split(' ');
                 IList<Coordinate> pathCoords = new List<Coordinate>();
-                foreach(var coord in coords)
+                int count = 0;
+                int coordLenght = coords.Length -1;
+                foreach (var coord in coords)
                 {
-                    var latLong = coord.Split(',');
-                    var coordObj = new Coordinate
-                    {
-                        lat = Convert.ToDouble(latLong[1]),
-                        lng = Convert.ToDouble(latLong[0])
-                    };
-                    pathCoords.Add(coordObj);
+                    if (count % 10 == 0 || count == coordLenght-1) { 
+                        var latLong = coord.Split(',');
+                        var coordObj = new Coordinate
+                        {
+                            lat = Convert.ToDouble(latLong[1]),
+                            lng = Convert.ToDouble(latLong[0])
+                        };
+                        pathCoords.Add(coordObj);
+                    }
+                    count++;
                 }
                 coordinates[i] = pathCoords;
                 i++;
@@ -70,6 +85,7 @@ namespace WebApplication1.Services
                 Name = countryName,
                 Path = coordinates
             };
+
             PersistCountryModel(country);
         }
 

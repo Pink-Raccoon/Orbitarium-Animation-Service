@@ -5,10 +5,12 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using WebApplication1.Services;
 
 namespace WebApplication1.Controller
 {
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class CountriesController : ApiController
     {
         // GET api/<controller>
@@ -30,7 +32,8 @@ namespace WebApplication1.Controller
         // GET api/<controller>/5
         public string Get(int id)
         {
-            return "value";
+            CountryImportService s = new CountryImportService();
+            return s.getCountryNames();
         }
 
         // POST api/<controller>
