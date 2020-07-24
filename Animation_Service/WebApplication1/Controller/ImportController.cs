@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using WebApplication1.Imports;
 using WebApplication1.Services;
 
 namespace WebApplication1.Controller
@@ -23,10 +24,26 @@ namespace WebApplication1.Controller
         }
 
         // POST api/<controller>
-        public string[] Post([FromBody]string value)
+        public string[] Post([FromBody]string type)
         {
-            ImportService import = new ImportService();
-            return import.ImportData(value);
+            if (type.ToLower().Equals("countries"))
+            {
+                var import = new CountryBordersImport();
+                return import.ImportCountries();
+                
+            }
+            else if (type.ToLower().Equals("coronadata"))
+            {
+                var import = new CoronaDataImport();
+                return import.ImportCoronaData();
+            }
+            else
+            {
+                return new string[] { "error", "data " + type + " has no corresponding import function" };
+            }
+
+
+
         }
 
         // PUT api/<controller>/5
