@@ -167,10 +167,12 @@
     <Compile Include="Animations\Animation.cs" />
     <Compile Include="Imports\CoronaDataImport.cs" />
     <Compile Include="Imports\CountryBordersImport.cs" />
+    <Compile Include="Imports\CountryPopulationImport.cs" />
     <Compile Include="Imports\Import.cs" />
     <Compile Include="Models\Coordinate.cs" />
     <Compile Include="Models\CountryBorders.cs" />
-    <Compile Include="Models\DateCountryInfectionInformation.cs" />
+    <Compile Include="Models\CountryPopulation.cs" />
+    <Compile Include="Models\DateCountryInfection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AnimationService.cs" />
     <Compile Include="Services\ImportService.cs" />

@@ -26,16 +26,21 @@ namespace WebApplication1.Controller
         // POST api/<controller>
         public string[] Post([FromBody]string type)
         {
-            if (type.ToLower().Equals("countries"))
+            if (type.ToLower().Equals("country_borders"))
             {
                 var import = new CountryBordersImport();
                 return import.ImportCountries();
-                
+
             }
-            else if (type.ToLower().Equals("coronadata"))
+            else if (type.ToLower().Equals("corona_data"))
             {
                 var import = new CoronaDataImport();
                 return import.ImportCoronaData();
+            }
+            else if (type.ToLower().Equals("country_population"))
+            {
+                var import = new CountryPopulationImport();
+                return import.ImportCountryPopulationData();
             }
             else
             {
