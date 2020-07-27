@@ -25,19 +25,30 @@ namespace WebApplication1.Imports
                 {
                     var splitted = s.Split(',');
                     var country = splitted[0];
+                    var population = ConvertToInt32(splitted[1]);
+                    var yearlyChange = ConvertToDouble(splitted[2]);
+                    var netChange = ConvertToInt32(splitted[3]);
+                    var density = ConvertToInt32(splitted[4]);
+                    var landArea = ConvertToInt32(splitted[5]);
+                    var migrants = ConvertToDouble(splitted[6]);
+                    var fertilityRate = ConvertToDouble(splitted[7]);
+                    var medianAge = ConvertToInt32(splitted[8]);
+                    var urbanPopulation = ConvertToDouble(splitted[9]);
+                    var worldShare = ConvertToDouble(splitted[10]);
+
                     var populationInformation = new CountryPopulation
                     {
                         CountryName = country,
-                        Population = Convert.ToInt32(splitted[1]),
-                        YearlyChange = Convert.ToDouble(splitted[2].Replace('%', ' ').Trim(' '))/100.0,
-                        NetChange = Convert.ToInt32(splitted[3]),
-                        Density = Convert.ToInt32(splitted[4]),
-                        LandArea = Convert.ToInt32(splitted[5]),
-                        Migrants = Convert.ToInt32(splitted[6]),
-                        FertilityRate = Convert.ToDouble(splitted[7]),
-                        MedianAge = Convert.ToInt32(splitted[8]),
-                        UrbanPopulation = Convert.ToDouble(splitted[9].Replace('%', ' ').Trim(' ')) / 100.0,
-                        WorldShare = Convert.ToDouble(splitted[10].Replace('%', ' ').Trim(' ')) / 100.0
+                        Population = population,
+                        YearlyChange = yearlyChange,
+                        NetChange = netChange,
+                        Density = density,
+                        LandArea = landArea,
+                        Migrants = migrants,
+                        FertilityRate = fertilityRate,
+                        MedianAge = medianAge,
+                        UrbanPopulation = urbanPopulation,
+                        WorldShare = worldShare
                     };
                     countryPopulationInformations.Add(country, populationInformation);
                     count++;
@@ -46,6 +57,55 @@ namespace WebApplication1.Imports
             PersistCountryPopulationInformation(countryPopulationInformations);
             return new string[] { "success", "country population for " + count + " countries has been successfully imported into the datastore" };
 
+        }
+
+        private double ConvertToDouble(string dbl)
+        {
+            if (dbl.Equals("")){
+                return -1.0;
+            }
+            else if (dbl.ToLower().Equals("n.a."))
+            {
+                return -1.0;
+            }
+            else if (dbl.Contains("%"))
+            {
+                return Convert.ToDouble(dbl.Replace('%', ' ').Trim(' ')) / 100.0;
+            } else
+            {
+                return Convert.ToDouble(dbl);
+            }
+        }
+
+        private int ConvertToInt32(string intgr)
+        {
+            if (intgr.Equals(""))
+            {
+                return -1;
+            }
+            else if (intgr.ToLower().Equals("n.a."))
+            {
+                return -1;
+            }
+            else if (intgr.Contains("%"))
+            {
+                return Convert.ToInt32(intgr.Replace('%', ' ').Trim(' ')) / 100;
+            }
+            else
+            {
+                return Convert.ToInt32(intgr);
+            }
+        }
+
+        private double ConvertUrbanPopulation(string pop)
+        {
+            if (pop.ToLower().Equals("n.a."))
+            {
+                return -1.0;
+            } else
+            {
+                return Convert.ToDouble(pop.Replace('%', ' ').Trim(' ')) / 100.0;
+            }
         }
 
         private void PersistCountryPopulationInformation(Dictionary<string, CountryPopulation> populationInformation)
