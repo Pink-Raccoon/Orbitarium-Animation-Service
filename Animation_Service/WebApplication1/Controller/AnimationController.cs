@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using WebApplication1.Animations;
 using WebApplication1.Services;
 
 namespace WebApplication1.Controller
@@ -23,13 +24,27 @@ namespace WebApplication1.Controller
         // GET api/<controller>/zimbabwe
         public string Get(string name)
         {
+            
             AnimationService a = new AnimationService();
             return a.GetDataFor(name);
         }
 
         // POST api/<controller>
-        public void Post([FromBody]string value)
+        public string Post([FromBody]string value)
         {
+            var splitted = value.Split(',');
+            var action = splitted[0];
+            var animationName = splitted[1];
+            if (action.ToLower().Equals("generate"))
+            {
+                if (animationName.ToLower().Equals("corona_spread"))
+                {
+                    var coronaSpread = new CoronaSpreadWorldwide();
+                    coronaSpread.GenerateAnimation();
+
+                }
+            }
+            return "success";
         }
 
         // PUT api/<controller>/5

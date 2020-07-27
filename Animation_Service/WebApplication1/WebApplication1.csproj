@@ -169,6 +169,8 @@
     <Compile Include="Imports\CountryBordersImport.cs" />
     <Compile Include="Imports\CountryPopulationImport.cs" />
     <Compile Include="Imports\Import.cs" />
+    <Compile Include="MapsObjects\MapsObject.cs" />
+    <Compile Include="MapsObjects\Polygon.cs" />
     <Compile Include="Models\Coordinate.cs" />
     <Compile Include="Models\CountryBorders.cs" />
     <Compile Include="Models\CountryPopulation.cs" />

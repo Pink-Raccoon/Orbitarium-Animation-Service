@@ -11,14 +11,6 @@ namespace WebApplication1.Services
 {
     public class PersistenceService
     {
-
-        //@Preussmeister: comment out this line for your directory.
-        //private static string DATA_DIR = @"C:\Users\Remo Preuss\Documents\GitHub\Orbitarium-Animation-Service\Animation_Service\WebApplication1\Data";
-        private static string DATA_DIR = ConfigurationManager.AppSettings["MyCustomSetting"];
-        private static string COUNTRIES_SRC_FOLDER = "countries";
-        private static string ANIMATIONS_STORAGE_FOLDER = "json";
-        private static string FILE_NAME = "gadm36_CHE_0.kml";
-
         public void SaveToFile (string path, string content)
         {
             FileInfo file = new FileInfo(path);
@@ -27,8 +19,15 @@ namespace WebApplication1.Services
             Console.WriteLine(path);
         }
 
-        public void ReadFromFile()
+        public string ReadFromFile(string path)
         {
+            FileInfo file = new FileInfo(path);
+            string content = "nothing";
+            if (file.Exists)
+            {
+                content = File.ReadAllText(path);
+            }
+            return content;
 
         }
     }
