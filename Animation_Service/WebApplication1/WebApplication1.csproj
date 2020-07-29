@@ -161,16 +161,18 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnimationDisplay\AnimationDisplay.cs" />
     <Compile Include="Controller\AnimationController.cs" />
-    <Compile Include="Animations\CoronaSpreadWorldwide.cs" />
+    <Compile Include="AnimationGenerator\CoronaSpreadWorldwideGenerator.cs" />
     <Compile Include="Controller\ImportController.cs" />
-    <Compile Include="Animations\Animation.cs" />
+    <Compile Include="AnimationGenerator\AnimationGenerator.cs" />
     <Compile Include="Imports\CoronaDataImport.cs" />
     <Compile Include="Imports\CountryBordersImport.cs" />
     <Compile Include="Imports\CountryPopulationImport.cs" />
     <Compile Include="Imports\Import.cs" />
     <Compile Include="MapsObjects\MapsObject.cs" />
     <Compile Include="MapsObjects\Polygon.cs" />
+    <Compile Include="MapsObjects\PolygonUpdate.cs" />
     <Compile Include="Models\Coordinate.cs" />
     <Compile Include="Models\CountryBorders.cs" />
     <Compile Include="Models\CountryPopulation.cs" />

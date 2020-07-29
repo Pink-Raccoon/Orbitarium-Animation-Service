@@ -13,6 +13,6 @@ namespace WebApplication1.MapsObjects
         public double StrokeOpacity { get; set; }
         public int StrokeWeight { get; set; }
         public string FillColor { get; set; }
-        public string FillOpacity { get; set; }
+        public double FillOpacity { get; set; }
     }
 }
