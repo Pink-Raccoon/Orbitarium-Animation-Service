@@ -12,8 +12,7 @@ namespace WebApplication1.AnimationGenerator
 {
     public class CoronaSpreadWorldwideGenerator : AnimationGenerator
     {
-        private static double highestInfectionRate = 0.0;
-        private static double opacityLevelPercent = 0.0;
+        private double maxRelativeNewCases = 0.0;
 
         protected readonly string INFECTED_COLOR = "#ff0000";
         protected readonly string NO_INFO_COLOR = "#000000";
@@ -28,6 +27,8 @@ namespace WebApplication1.AnimationGenerator
             var coronaSpread = GetSpreadData();
             //get country population information
             var countryPopulations = GetCountryPopulations();
+
+            EvaluateHighestInfectionCount(coronaSpread, countryPopulations);
 
             GenerateAnimationInitialization(countryBorders, coronaSpread, countryPopulations);
             GenerateAnimationUpdates(countryBorders, coronaSpread, countryPopulations);
@@ -76,14 +77,12 @@ namespace WebApplication1.AnimationGenerator
                 {
                     var countryInformation = countryInformations[countryBorder.Key];
 
-                    double fillOpacity = calculateFillOpacity(countryInformation.ConfirmedInfections, countryPopulations[countryBorder.Key]);
+                    double fillOpacity = getFillOpacity(countryInformation.NewCases, countryPopulations[countryBorder.Key]);
 
                     if (countryInformation.ConfirmedInfections != 0)
                     {
                         polygon.StrokeColor = INFECTED_COLOR;
                         polygon.FillColor = INFECTED_COLOR;
-                        //Todo: set opacity based on infection rate
-                        //polygon.FillOpacity = ToDo!
                         polygon.FillOpacity = fillOpacity;
                         polygon.Paint = true;
                     } else
@@ -124,19 +123,18 @@ namespace WebApplication1.AnimationGenerator
                     {
                         var countryInfectionInformation = dayInfection.Value;
 
-                        double fillOpacity = calculateFillOpacity(countryInfectionInformation.ConfirmedInfections, countryPopulations[countryName]);
+                        double fillOpacity = getFillOpacity(countryInfectionInformation.NewCases, countryPopulations[countryName]);
 
                         var polygonUpdate = new PolygonUpdate();
                         if(countryInfectionInformation.ConfirmedInfections != 0)
                         {
                             polygonUpdate.StrokeColor = INFECTED_COLOR;
                             polygonUpdate.FillColor = INFECTED_COLOR;
-                            //Todo: set opacity based on infection rate
-                            //polygon.FillOpacity = ToDo!
                             polygonUpdate.FillOpacity = fillOpacity;
                             polygonUpdate.Paint = true;
                         }
-                        //Debug line                        //if (countryName.Equals("Switzerland"))
+                        //Debug line                        
+                        //if (countryName.Equals("Switzerland"))
                         //{
                         dayUpdates.Add(countryName, polygonUpdate);
                         //}
@@ -204,44 +202,47 @@ namespace WebApplication1.AnimationGenerator
             return countryPopulations;
         }
 
-        private double calculateFillOpacity(int confirmedInfections, CountryPopulation countryPopulation) {
-            int population = countryPopulation.Population;
-            double rate = confirmedInfections / population;
-
-            updateHighestInfectionRateAndOpacityLevel(population, rate);
-
-            return rate * opacityLevelPercent;
-        }
-
-        private void updateHighestInfectionRateAndOpacityLevel(int population, double rate) {
-
-            if (rate > highestInfectionRate) {
-                highestInfectionRate = rate;
-                // update opacity (in %) for 1% of country infection
-                opacityLevelPercent = 100 / highestInfectionRate;
-            }
-        }
-
-        private int GetHighestInfectionsPerMio(Dictionary<string, CountryPopulation> countryPopulations, Dictionary<string, DateCountryInfection> coronaSpread)
+        private void EvaluateHighestInfectionCount(OrderedDictionary coronaSpread, Dictionary<string, CountryPopulation> countryPopulations)
         {
-            int highestInfections = 0;
-            foreach (var countryPopulation in countryPopulations)
+            var enumerator = coronaSpread.GetEnumerator();
+            while (enumerator.MoveNext())
             {
-                var countryName = countryPopulation.Key;
-                if (coronaSpread.ContainsKey(countryName)){
-                    var countryInfo = countryPopulation.Value;
-                    var population = countryInfo.Population;
-                    
+                var date = enumerator.Key;
+                Dictionary<string, DateCountryInfection> dayInfections = (Dictionary<string, DateCountryInfection>)enumerator.Value;
+                foreach (var dayInfection in dayInfections)
+                {
+                    var countryName = dayInfection.Key;
+                    var countryInfectionInformation = dayInfection.Value;
+
+                    double newCases = Convert.ToDouble(countryInfectionInformation.NewCases);
+                    CountryPopulation info = countryPopulations[countryName];
+                    double population = Convert.ToDouble(info.Population);
+                    double relNewCases = newCases / population;
+                    if (relNewCases > maxRelativeNewCases)
+                    {
+                        // grösste gemessene neu-ansteckungszahl relativ zur bevölkerung dieses landes
+                        maxRelativeNewCases = relNewCases;
+                    }
                 }
-
-
-                
-                
-
             }
-            return 0;
-
         }
 
+        private double getFillOpacity(int newC, CountryPopulation countryPopulation) {
+            double newCases = Convert.ToDouble(newC);
+            double population = Convert.ToDouble(countryPopulation.Population);
+            double relNewCases = newCases / population;
+            return calculateFillOpacity(relNewCases);
+        }
+
+        private double calculateFillOpacity(double relNewCases) {
+            // calculate logarithmic values to linear percentage
+            // source: https://stackoverflow.com/a/19796139
+            double b = 10.0;
+            double s = 100.0 / (b - 1);
+            double t = -100.0 / (b - 1);
+            double f = s * Math.Pow(b, relNewCases / maxRelativeNewCases) + t;
+            // bring it in [0..1] range
+            return f;
+        }
     }
 }
