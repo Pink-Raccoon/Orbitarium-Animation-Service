@@ -60,7 +60,6 @@ namespace WebApplication1.AnimationDisplay
             Updates = (Dictionary<string, PolygonUpdate>)element.Value;
             IsCurrentStepSent = false;
             Step++;
-            Console.WriteLine("Step: " + Step + "; Date:" + TimeStamp);
             Thread.Sleep(1000);
             MoveToNextTimeStep();
         }
@@ -83,7 +82,7 @@ namespace WebApplication1.AnimationDisplay
             if (!IsCurrentStepSent)
             {
                 IsCurrentStepSent = true;
-                return JsonConvert.SerializeObject(new { Step = Step, Updates = Updates });
+                return JsonConvert.SerializeObject(new { TimeStamp = TimeStamp, Step = Step, Updates = Updates });
             } else
             {
                 return JsonConvert.SerializeObject("noop");

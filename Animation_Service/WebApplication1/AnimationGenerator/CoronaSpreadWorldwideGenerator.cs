@@ -15,8 +15,6 @@ namespace WebApplication1.AnimationGenerator
         //get path to the datastore
         protected string datastorePath = Path.Combine(BASE_DIR, DATASTORE_FOLDER);
 
-
-
         public void GenerateAnimation()
         {
             //get all country borders
@@ -28,23 +26,13 @@ namespace WebApplication1.AnimationGenerator
 
             GenerateAnimationInitialization(countryBorders, coronaSpread, countryPopulations);
             GenerateAnimationUpdates(countryBorders, coronaSpread, countryPopulations);
-
-            OrderedDictionary animation = new OrderedDictionary();
-
-
-            
-
-
-
-
-            var a = 1;
         }
 
+        //todo: move to AnimationDisplay
         public string GetAnimationInitialization()
         {
             var destPath = Path.Combine(BASE_DIR, ANIMATIONS_FOLDER, "corona_spread", "corona_spread_init.json");
             return persistence.ReadFromFile(destPath);
-
         }
 
         private string GenerateAnimationInitialization(Dictionary<string, CountryBorders> countryBorders, OrderedDictionary coronaSpread, Dictionary<string, CountryPopulation> countryPopulations)
@@ -77,7 +65,10 @@ namespace WebApplication1.AnimationGenerator
                     polygon.StrokeColor = "#000000";
                     polygon.FillColor = "#000000";
                 }
-                mapsObjects.Add(countryBorder.Key, polygon);
+                //Debug line
+                //if (countryBorder.Key.Equals("Switzerland")){
+                    mapsObjects.Add(countryBorder.Key, polygon);
+                //}
             }
             mapsObjects.Remove("Antarctica");
             PersistInitalization(mapsObjects);
@@ -111,7 +102,10 @@ namespace WebApplication1.AnimationGenerator
                             polygonUpdate.FillColor = "#ffeded";
                             // fill opacity based on confirmed infections!
                         }
-                        dayUpdates.Add(countryName, polygonUpdate);
+                        //Debug line                        //if (countryName.Equals("Switzerland"))
+                        //{
+                            dayUpdates.Add(countryName, polygonUpdate);
+                        //}
                     }
                     
                 }
@@ -133,7 +127,7 @@ namespace WebApplication1.AnimationGenerator
         private void PersistInitalization(Dictionary<string, Polygon> mapsObjects)
         {
             var destPath = Path.Combine(BASE_DIR, ANIMATIONS_FOLDER, "corona_spread", "corona_spread_init.json");
-            var serialized = JsonConvert.SerializeObject(mapsObjects);
+            var serialized = JsonConvert.SerializeObject(mapsObjects, Formatting.None);
             persistence.SaveToFile(destPath, serialized);
         }
 
@@ -176,11 +170,26 @@ namespace WebApplication1.AnimationGenerator
             return countryPopulations;
         }
 
-
-
-        public void Test()
+        private int GetHighestInfectionsPerMio(Dictionary<string, CountryPopulation> countryPopulations, Dictionary<string, DateCountryInfection> coronaSpread)
         {
-            
+            int highestInfections = 0;
+            foreach (var countryPopulation in countryPopulations)
+            {
+                var countryName = countryPopulation.Key;
+                if (coronaSpread.ContainsKey(countryName)){
+                    var countryInfo = countryPopulation.Value;
+                    var population = countryInfo.Population;
+                    
+                }
+
+
+                
+                
+
+            }
+            return 0;
+
         }
+
     }
 }
