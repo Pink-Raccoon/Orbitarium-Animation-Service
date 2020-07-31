@@ -15,6 +15,8 @@ namespace WebApplication1.AnimationGenerator
         private static double highestInfectionRate = 0.0;
         private static double opacityLevelPercent = 0.0;
 
+        protected readonly string INFECTED_COLOR = "#ff0000";
+        protected readonly string NO_INFO_COLOR = "#000000";
         //get path to the datastore
         protected string datastorePath = Path.Combine(BASE_DIR, DATASTORE_FOLDER);
 
@@ -66,7 +68,6 @@ namespace WebApplication1.AnimationGenerator
             {
                 var polygon = new Polygon();
                 polygon.Type = "polygon";
-                polygon.FillOpacity = 0.2;
                 polygon.StrokeOpacity = 0.8;
                 polygon.StrokeWeight = 2;
                 polygon.Paths = countryBorder.Value.Path;
@@ -77,21 +78,24 @@ namespace WebApplication1.AnimationGenerator
 
                     double fillOpacity = calculateFillOpacity(countryInformation.ConfirmedInfections, countryPopulations[countryBorder.Key]);
 
-                    if (countryInformation.ConfirmedInfections == 0)
+                    if (countryInformation.ConfirmedInfections != 0)
                     {
-                        polygon.StrokeColor = "#8cdc37";
-                        polygon.FillColor = "#a9f658";
+                        polygon.StrokeColor = INFECTED_COLOR;
+                        polygon.FillColor = INFECTED_COLOR;
+                        //Todo: set opacity based on infection rate
+                        //polygon.FillOpacity = ToDo!
+                        polygon.FillOpacity = fillOpacity;
+                        polygon.Paint = true;
                     } else
                     {
-                        polygon.StrokeColor = "#ff0000";
-                        polygon.FillColor = "#ffeded";
-                        polygon.FillOpacity = fillOpacity;
+                        polygon.Paint = false;
                     }
-                    
                 } else
                 {
-                    polygon.StrokeColor = "#000000";
-                    polygon.FillColor = "#000000";
+                    polygon.StrokeColor = NO_INFO_COLOR;
+                    polygon.FillColor = NO_INFO_COLOR;
+                    polygon.FillOpacity = 0.2;
+                    polygon.Paint = true;
                 }
                 //Debug line
                 //if (countryBorder.Key.Equals("Switzerland")){
@@ -123,21 +127,18 @@ namespace WebApplication1.AnimationGenerator
                         double fillOpacity = calculateFillOpacity(countryInfectionInformation.ConfirmedInfections, countryPopulations[countryName]);
 
                         var polygonUpdate = new PolygonUpdate();
-                        if(countryInfectionInformation.ConfirmedInfections == 0)
+                        if(countryInfectionInformation.ConfirmedInfections != 0)
                         {
-                            polygonUpdate.StrokeColor = "#8cdc37";
-                            polygonUpdate.FillColor = "#a9f658";
-                            
-                        } else
-                        {
-                            polygonUpdate.StrokeColor = "#ff0000";
-                            polygonUpdate.FillColor = "#ffeded";
+                            polygonUpdate.StrokeColor = INFECTED_COLOR;
+                            polygonUpdate.FillColor = INFECTED_COLOR;
+                            //Todo: set opacity based on infection rate
+                            //polygon.FillOpacity = ToDo!
                             polygonUpdate.FillOpacity = fillOpacity;
-                            // fill opacity based on confirmed infections!
+                            polygonUpdate.Paint = true;
                         }
                         //Debug line                        //if (countryName.Equals("Switzerland"))
                         //{
-                            dayUpdates.Add(countryName, polygonUpdate);
+                        dayUpdates.Add(countryName, polygonUpdate);
                         //}
                     }
                     

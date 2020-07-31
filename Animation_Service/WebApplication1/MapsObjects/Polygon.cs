@@ -14,5 +14,6 @@ namespace WebApplication1.MapsObjects
         public int StrokeWeight { get; set; }
         public string FillColor { get; set; }
         public double FillOpacity { get; set; }
+        public bool Paint { get; set; }
     }
 }
