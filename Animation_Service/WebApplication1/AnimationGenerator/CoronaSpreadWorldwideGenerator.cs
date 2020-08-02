@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using WebApplication1.MapsObjects;
 using WebApplication1.Models;
+using System.Drawing;
 
 namespace WebApplication1.AnimationGenerator
 {
@@ -77,13 +78,15 @@ namespace WebApplication1.AnimationGenerator
                 {
                     var countryInformation = countryInformations[countryBorder.Key];
 
-                    double fillOpacity = getFillOpacity(countryInformation.NewCases, countryPopulations[countryBorder.Key]);
+                    //double fillOpacity = getFillOpacity(countryInformation.Active, countryPopulations[countryBorder.Key]);
+                    string color = getFillColor(countryInformation.Active, countryPopulations[countryBorder.Key]);
 
                     if (countryInformation.ConfirmedInfections != 0)
                     {
-                        polygon.StrokeColor = INFECTED_COLOR;
-                        polygon.FillColor = INFECTED_COLOR;
-                        polygon.FillOpacity = fillOpacity;
+                        polygon.StrokeColor = color;
+                        polygon.FillColor = color;
+                        //polygon.FillOpacity = fillOpacity;
+                        polygon.FillOpacity = 0.2;
                         polygon.Paint = true;
                     } else
                     {
@@ -123,14 +126,16 @@ namespace WebApplication1.AnimationGenerator
                     {
                         var countryInfectionInformation = dayInfection.Value;
 
-                        double fillOpacity = getFillOpacity(countryInfectionInformation.NewCases, countryPopulations[countryName]);
+                        //double fillOpacity = getFillOpacity(countryInfectionInformation.Active, countryPopulations[countryName]);
+                        string color = getFillColor(countryInfectionInformation.Active, countryPopulations[countryName]);
 
                         var polygonUpdate = new PolygonUpdate();
                         if(countryInfectionInformation.ConfirmedInfections != 0)
                         {
-                            polygonUpdate.StrokeColor = INFECTED_COLOR;
-                            polygonUpdate.FillColor = INFECTED_COLOR;
-                            polygonUpdate.FillOpacity = fillOpacity;
+                            polygonUpdate.StrokeColor = color;
+                            polygonUpdate.FillColor = color;
+                            //polygonUpdate.FillOpacity = fillOpacity;
+                            polygonUpdate.FillOpacity = 0.2;
                             polygonUpdate.Paint = true;
                         }
                         //Debug line                        
@@ -214,7 +219,7 @@ namespace WebApplication1.AnimationGenerator
                     var countryName = dayInfection.Key;
                     var countryInfectionInformation = dayInfection.Value;
 
-                    double newCases = Convert.ToDouble(countryInfectionInformation.NewCases);
+                    double newCases = Convert.ToDouble(countryInfectionInformation.Active);
                     CountryPopulation info = countryPopulations[countryName];
                     double population = Convert.ToDouble(info.Population);
                     double relNewCases = newCases / population;
@@ -224,6 +229,35 @@ namespace WebApplication1.AnimationGenerator
                         maxRelativeNewCases = relNewCases;
                     }
                 }
+            }
+        }
+
+        private string getFillColor(int infections, CountryPopulation countryPopulation) {
+            double percent = getFillOpacity(infections, countryPopulation);
+            Color myColor;
+            if (percent <= 0.25)
+            {
+                myColor = Color.FromArgb(230, 200, 50);
+                return "#" + myColor.R.ToString("X2") + myColor.G.ToString("X2") + myColor.B.ToString("X2");
+            }
+            else if (percent <= 0.5)
+            {
+                myColor = Color.FromArgb(230, 170, 50);
+                return "#" + myColor.R.ToString("X2") + myColor.G.ToString("X2") + myColor.B.ToString("X2");
+            }
+            else if (percent <= 0.8)
+            {
+                myColor = Color.FromArgb(230, 130, 50);
+                return "#" + myColor.R.ToString("X2") + myColor.G.ToString("X2") + myColor.B.ToString("X2");
+            }
+            else if (percent <= 0.995)
+            {
+                myColor = Color.FromArgb(230, 50, 50);
+                return "#" + myColor.R.ToString("X2") + myColor.G.ToString("X2") + myColor.B.ToString("X2");
+            }
+            else {
+                myColor = Color.FromArgb(180, 50, 230);
+                return "#" + myColor.R.ToString("X2") + myColor.G.ToString("X2") + myColor.B.ToString("X2");
             }
         }
 
