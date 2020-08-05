@@ -20,6 +20,7 @@ namespace WebApplication1.Imports
             {
                 //allCountries.Add(ParseCountryModel(file));
                 ParseCountryModel(file);
+
             }
             //PersistCountryModel(allCountries);
             return new string[] { "success", files.Count() + " country borders have been successfully imported into the datastore" };
@@ -30,9 +31,24 @@ namespace WebApplication1.Imports
             var doc = XDocument.Load(filePath);
             XNamespace ns = "http://www.opengis.net/kml/2.2";
 
+            List<XElement> placemarks = doc.Descendants(ns + "Placemark").ToList();
+
+            foreach (XElement placemark in placemarks) {
+                PersistCountryModel(getCountryBorder(placemark, ns));
+            }
+        }
+
+        private CountryBorders getCountryBorder(XElement placemark, XNamespace ns) { 
             // get all outer boundaries. we don't care about the inner ones.
-            var outerBoundaries = doc.Descendants(ns + "outerBoundaryIs").ToArray();
-            var countryName = doc.Descendants(ns + "SimpleData").ToList()[0].Value;
+            
+            var outerBoundaries = placemark.Descendants(ns + "outerBoundaryIs").ToArray();
+            List<XElement> countryNames = placemark.Descendants(ns + "SimpleData").ToList();
+
+            string countryName = countryNames[0].Value;
+            if (countryNames.Count > 1)
+            {
+                countryName = countryNames[1].Value;
+            }
 
             List<string> paths = new List<string>();
 
@@ -74,15 +90,17 @@ namespace WebApplication1.Imports
                 Path = coordinates
             };
 
-            PersistCountryModel(country);
+            return country;
         }
 
         private void PersistCountryModel(CountryBorders country)
         {
             var countryString = JsonConvert.SerializeObject(country, Formatting.None);
-            persistence.SaveToFile(Path.Combine(BASE_DIR, DATASTORE_FOLDER, "country_border", country.Name + ".json"), countryString);
+            string fileName = country.Name;
+            if (fileName.Equals("Taiwan*")) {
+                fileName = "Taiwan";
+            }
+            persistence.SaveToFile(Path.Combine(BASE_DIR, DATASTORE_FOLDER, "country_border", fileName + ".json"), countryString);
         }
-
-
     }
 }
