@@ -11,7 +11,7 @@ namespace WebApplication1.Services
 {
     public class PersistenceService
     {
-        public void SaveToFile (string path, string content)
+        public void SaveToFile(string path, string content)
         {
             FileInfo file = new FileInfo(path);
             file.Directory.Create();

@@ -173,6 +173,7 @@
     <Compile Include="MapsObjects\MapsObject.cs" />
     <Compile Include="MapsObjects\Polygon.cs" />
     <Compile Include="MapsObjects\PolygonUpdate.cs" />
+    <Compile Include="Models\AnimationInformation.cs" />
     <Compile Include="Models\Coordinate.cs" />
     <Compile Include="Models\CountryBorders.cs" />
     <Compile Include="Models\CountryPopulation.cs" />

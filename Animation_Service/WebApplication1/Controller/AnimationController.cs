@@ -20,15 +20,15 @@ namespace WebApplication1.Controller
         public string Get()
         {
             AnimationService animationService = new AnimationService();
-            return animationService.GetAnimation();
+            return animationService.GetAnimationsSummary();
         }
 
         // GET api/<controller>/zimbabwe
-        public string Get(string name)
+        public string Get(string key)
         {
             
             AnimationService a = new AnimationService();
-            return a.GetDataFor(name);
+            return "lol";
         }
 
         // POST api/<controller>
