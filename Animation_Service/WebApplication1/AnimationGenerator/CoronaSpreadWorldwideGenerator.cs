@@ -14,7 +14,6 @@ namespace WebApplication1.AnimationGenerator
     public class CoronaSpreadWorldwideGenerator : AnimationGenerator
     {
         private double maxRelativeNewCases = 0.0;
-
         protected readonly string INFECTED_COLOR = "#ff0000";
         protected readonly string NO_INFO_COLOR = "#000000";
         //get path to the datastore
@@ -33,6 +32,16 @@ namespace WebApplication1.AnimationGenerator
 
             GenerateAnimationInitialization(countryBorders, coronaSpread, countryPopulations);
             GenerateAnimationUpdates(countryBorders, coronaSpread, countryPopulations);
+            SetAnimationInformation();
+            GenerateAnimationInformation();
+        }
+
+        private void SetAnimationInformation()
+        {
+            animationInformation = new AnimationInformation();
+            animationInformation.AnimationKey = "corona_spread_worldwide";
+            animationInformation.AnimationName = "Corona Spread Worldwide";
+            animationInformation.AnimationDescription = "This animation displays the spread of the corona virus. From the beginning, it display the corona situation on January 22nd, 2020. Normal countries are not marked, infected are red. The opacity indicates the count of infected humans relative to other countries.";
         }
 
         public string getDifferences() {
@@ -54,6 +63,8 @@ namespace WebApplication1.AnimationGenerator
 
             return diff;
         }
+
+        
 
         //todo: move to AnimationDisplay
         public string GetAnimationInitialization()
