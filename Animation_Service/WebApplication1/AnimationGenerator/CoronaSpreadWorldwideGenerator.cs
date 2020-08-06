@@ -41,8 +41,7 @@ namespace WebApplication1.AnimationGenerator
             animationInformation = new AnimationInformation();
             animationInformation.AnimationKey = "corona_spread_worldwide";
             animationInformation.AnimationName = "Corona Spread Worldwide";
-            animationInformation.AnimationDescription = "This animation displays the spread of the corona virus.";
-            GenerateAnimationInformation();
+            animationInformation.AnimationDescription = "This animation displays the spread of the corona virus. From the beginning, it display the corona situation on January 22nd, 2020. Normal countries are not marked, infected are red. The opacity indicates the count of infected humans relative to other countries.";
         }
 
         public string getDifferences() {

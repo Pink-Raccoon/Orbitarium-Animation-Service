@@ -32,13 +32,13 @@ namespace WebApplication1.AnimationGenerator
             {
                 animationsSummary = new Dictionary<string, AnimationInformation>();
             }
-            if (animationsSummary.ContainsKey(animationInformation.AnimationKey))
+            if (animationsSummary.ContainsKey(animationInformation.AnimationName))
             {
-                animationsSummary[animationInformation.AnimationKey] = animationInformation;
+                animationsSummary[animationInformation.AnimationName] = animationInformation;
                
             } else
             {
-                animationsSummary.Add(animationInformation.AnimationKey, animationInformation);
+                animationsSummary.Add(animationInformation.AnimationName, animationInformation);
             }
 
             PersistAnimationsSummary(animationsSummary);
