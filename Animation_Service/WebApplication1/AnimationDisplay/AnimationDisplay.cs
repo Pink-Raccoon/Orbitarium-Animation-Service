@@ -47,21 +47,19 @@ namespace WebApplication1.AnimationDisplay
 
         private static void MoveToNextTimeStep()
         {
-            if (!IsPlaying)
+            while (IsPlaying)
             {
-                return;
+                if (Timeline.Count < (Step + 1))
+                {
+                    Step = 0;
+                }
+                var element = Timeline.Cast<DictionaryEntry>().ElementAt(Step);
+                TimeStamp = element.Key.ToString();
+                Updates = (Dictionary<string, PolygonUpdate>)element.Value;
+                IsCurrentStepSent = false;
+                Step++;
+                Thread.Sleep(1000);
             }
-            if (Timeline.Count < (Step+1))
-            {
-                Step = 0;
-            }
-            var element = Timeline.Cast<DictionaryEntry>().ElementAt(Step);
-            TimeStamp = element.Key.ToString();
-            Updates = (Dictionary<string, PolygonUpdate>)element.Value;
-            IsCurrentStepSent = false;
-            Step++;
-            Thread.Sleep(1000);
-            MoveToNextTimeStep();
         }
 
         public static void Start()

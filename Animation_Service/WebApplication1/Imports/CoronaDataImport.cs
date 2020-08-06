@@ -18,6 +18,7 @@ namespace WebApplication1.Imports
 
             DateTime dateBefore = DateTime.MinValue;
             Dictionary<string, DateCountryInfection> dayInformation = new Dictionary<string, DateCountryInfection>();
+            List<DateCountryInfection> dateProvinceInfections = new List<DateCountryInfection>();
             using (StreamReader sr = File.OpenText(srcPath))
             {
                 string s;
@@ -57,6 +58,8 @@ namespace WebApplication1.Imports
                     }
                     else
                     {
+                        dateProvinceInfections = importChinaCoronaData(dateBefore);
+                        dayInformation = addProvincesToList(dateBefore, dateProvinceInfections, dayInformation);
                         coronaInformation.Add(dateBefore, dayInformation);
                         dayInformation = new Dictionary<string, DateCountryInfection>();
                         dayInformation = getDateStateInformation(date, dayInformation);
@@ -64,13 +67,31 @@ namespace WebApplication1.Imports
                         dateBefore = date;
                     }
                 }
+                dateProvinceInfections = importChinaCoronaData(dateBefore);
+                dayInformation = addProvincesToList(dateBefore, dateProvinceInfections, dayInformation);
+                coronaInformation.Add(dateBefore, dayInformation);
             }
-
-            importChinaCoronaData();
 
             PersistCoronaInformation(coronaInformation);
             
             return new string[] { "success", "corona data for countries has been successfully imported into the datastore" };
+        }
+
+        private Dictionary<string, DateCountryInfection> addProvincesToList(DateTime date, List<DateCountryInfection> dateProvinceInfections, Dictionary<string, DateCountryInfection> dayInformation) {
+            DateTime yesterday = date.AddDays(-1);
+            int yesterdayInfectionCount = 0;            
+
+            foreach (DateCountryInfection dateProvinceInfection in dateProvinceInfections) {
+                if (coronaInformation.Contains(yesterday))
+                {
+                    Dictionary<string, DateCountryInfection> a = (Dictionary<string, DateCountryInfection>)coronaInformation[yesterday];
+                    DateCountryInfection b = a[dateProvinceInfection.Country];
+                    yesterdayInfectionCount = b.ConfirmedInfections;
+                }
+                dateProvinceInfection.NewCases = dateProvinceInfection.ConfirmedInfections - yesterdayInfectionCount;
+                dayInformation.Add(dateProvinceInfection.Country, dateProvinceInfection);
+            }
+            return dayInformation;
         }
 
         private Dictionary<string, DateCountryInfection> getDateStateInformation(DateTime date, Dictionary<string, DateCountryInfection> dayInformation) {
@@ -178,8 +199,48 @@ namespace WebApplication1.Imports
             return 0;
         }
 
-        private void importChinaCoronaData() { 
-        
+        private List<DateCountryInfection> importChinaCoronaData(DateTime date) {
+            var srcPath = Path.Combine(BASE_DIR, SRC_FOLDER, "corona_data", "covid_19_clean_complete.csv");
+            List<DateCountryInfection> dateProvinceInfectionList = new List<DateCountryInfection>();
+            using (StreamReader sr = File.OpenText(srcPath))
+            {
+                string s;
+                //skip csv header
+                s = sr.ReadLine();
+                while ((s = sr.ReadLine()) != null) {
+                    // [0]: Province, [1]: Country, [4]: Date, [5]: Confirmed, [6]: Death, [7]: Recovered, [8]: Active
+                    var splitted = s.Split(',');
+
+                    var dateSplitted = splitted[4].Split('-');
+                    var parsedDate = new DateTime(
+                            Convert.ToInt16(dateSplitted[0]),
+                            Convert.ToInt16(dateSplitted[1]),
+                            Convert.ToInt16(dateSplitted[2])
+                        );
+
+                    if (splitted[1].Equals("China") && parsedDate.Equals(date)) {
+                        var dateProvinceInformation = new DateCountryInfection
+                        {
+                            Date = date,
+                            Country = splitted[0],
+                            ConfirmedInfections = Convert.ToInt32(splitted[5]),
+                            Deaths = Convert.ToInt32(splitted[6]),
+                            Recovered = Convert.ToInt32(splitted[7]),
+                            Active = Convert.ToInt32(splitted[8]),
+                            NewCases = 0,
+                            NewDeaths = 0,
+                            NewRecovered = 0
+                        };
+                        dateProvinceInfectionList.Add(dateProvinceInformation);
+                    }
+
+                    if (parsedDate > date) {
+                        // we are too far down the file -> abort reading for performance sake
+                        return dateProvinceInfectionList;
+                    }
+                }
+            }
+            return dateProvinceInfectionList;
         }
     }
 }

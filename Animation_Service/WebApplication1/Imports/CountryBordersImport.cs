@@ -69,7 +69,7 @@ namespace WebApplication1.Imports
                 int coordLenght = coords.Length - 1;
                 foreach (var coord in coords)
                 {
-                    if (count % 50 == 0 || count == coordLenght - 1)
+                    if (count % 20 == 0 || count == coordLenght - 1)
                     {
                         var latLong = coord.Split(',');
                         var coordObj = new Coordinate

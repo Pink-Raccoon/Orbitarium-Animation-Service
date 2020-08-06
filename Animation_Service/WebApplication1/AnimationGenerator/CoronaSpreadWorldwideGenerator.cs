@@ -78,15 +78,15 @@ namespace WebApplication1.AnimationGenerator
                 {
                     var countryInformation = countryInformations[countryBorder.Key];
 
-                    //double fillOpacity = getFillOpacity(countryInformation.Active, countryPopulations[countryBorder.Key]);
-                    string color = getFillColor(countryInformation.Active, countryPopulations[countryBorder.Key]);
+                    double fillOpacity = getFillOpacity(countryInformation.ConfirmedInfections, countryPopulations[countryBorder.Key]);
+                    //string color = getFillColor(countryInformation.NewCases, countryPopulations[countryBorder.Key]);
 
                     if (countryInformation.ConfirmedInfections != 0)
                     {
-                        polygon.StrokeColor = color;
-                        polygon.FillColor = color;
-                        //polygon.FillOpacity = fillOpacity;
-                        polygon.FillOpacity = 0.2;
+                        polygon.StrokeColor = INFECTED_COLOR;
+                        polygon.FillColor = INFECTED_COLOR;
+                        polygon.FillOpacity = fillOpacity;
+                        //polygon.FillOpacity = 0.2;
                         polygon.Paint = true;
                     } else
                     {
@@ -126,16 +126,16 @@ namespace WebApplication1.AnimationGenerator
                     {
                         var countryInfectionInformation = dayInfection.Value;
 
-                        //double fillOpacity = getFillOpacity(countryInfectionInformation.Active, countryPopulations[countryName]);
-                        string color = getFillColor(countryInfectionInformation.Active, countryPopulations[countryName]);
+                        double fillOpacity = getFillOpacity(countryInfectionInformation.ConfirmedInfections, countryPopulations[countryName]);
+                        //string color = getFillColor(countryInfectionInformation.NewCases, countryPopulations[countryName]);
 
                         var polygonUpdate = new PolygonUpdate();
                         if(countryInfectionInformation.ConfirmedInfections != 0)
                         {
-                            polygonUpdate.StrokeColor = color;
-                            polygonUpdate.FillColor = color;
-                            //polygonUpdate.FillOpacity = fillOpacity;
-                            polygonUpdate.FillOpacity = 0.2;
+                            polygonUpdate.StrokeColor = INFECTED_COLOR;
+                            polygonUpdate.FillColor = INFECTED_COLOR;
+                            polygonUpdate.FillOpacity = fillOpacity;
+                            //polygonUpdate.FillOpacity = 0.2;
                             polygonUpdate.Paint = true;
                         }
                         //Debug line                        
@@ -219,7 +219,7 @@ namespace WebApplication1.AnimationGenerator
                     var countryName = dayInfection.Key;
                     var countryInfectionInformation = dayInfection.Value;
 
-                    double newCases = Convert.ToDouble(countryInfectionInformation.Active);
+                    double newCases = Convert.ToDouble(countryInfectionInformation.ConfirmedInfections);
                     CountryPopulation info = countryPopulations[countryName];
                     double population = Convert.ToDouble(info.Population);
                     double relNewCases = newCases / population;
@@ -271,7 +271,8 @@ namespace WebApplication1.AnimationGenerator
         private double calculateFillOpacity(double relNewCases) {
             // calculate logarithmic values to linear percentage
             // source: https://stackoverflow.com/a/19796139
-            double b = 10.0;
+            //double b = 10.0;
+            double b = 11.0;
             double s = 100.0 / (b - 1);
             double t = -100.0 / (b - 1);
             double f = s * Math.Pow(b, relNewCases / maxRelativeNewCases) + t;
