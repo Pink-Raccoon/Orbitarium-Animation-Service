@@ -21,6 +21,7 @@ namespace WebApplication1.AnimationDisplay
         public static int Step { get; set; }
         public static bool IsCurrentStepSent { get; set; }
         public static bool IsPlaying { get; set; }
+        public static bool Stopped { get; set; }
 
         public static void LoadAnimation()
         {
@@ -66,6 +67,7 @@ namespace WebApplication1.AnimationDisplay
         {
             IsCurrentStepSent = false;
             IsPlaying = true;
+            Stopped = false;
             Thread t = new Thread(new ThreadStart(MoveToNextTimeStep));
             t.Start();
         }
@@ -73,6 +75,7 @@ namespace WebApplication1.AnimationDisplay
         public static void Stop()
         {
             IsPlaying = false;
+            Stopped = true;
         }
 
         public static string GetAnimationUpdates()

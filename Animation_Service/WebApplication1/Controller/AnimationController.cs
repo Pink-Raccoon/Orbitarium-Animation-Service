@@ -26,9 +26,14 @@ namespace WebApplication1.Controller
         // GET api/<controller>/zimbabwe
         public string Get(string key)
         {
+            switch (key) {
+                case "stop": AnimationDisplay.AnimationDisplay.Stop();
+                    return "stopped";
+                case "continue": AnimationDisplay.AnimationDisplay.Start();
+                    return "continued";
+                default: return "Key: " + key + " not found";
+            }
             
-            AnimationService a = new AnimationService();
-            return "lol";
         }
 
         // POST api/<controller>

@@ -43,7 +43,7 @@ namespace WebApplication1.AnimationGenerator
             animationInformation.AnimationName = "Corona Spread Worldwide";
             animationInformation.InitUri = "http://localhost:12346/corona_spread/";
             animationInformation.RunCommand = "runAnimation();";
-            animationInformation.AnimationDescription = "This animation displays the spread of the corona virus. From the beginning, it display the corona situation on January 22nd, 2020. Normal countries are not marked, infected are red. The opacity indicates the count of infected humans relative to other countries.";
+            animationInformation.AnimationDescription = "This animation displays the spread of the corona virus. In the beginning, it display the corona situation on January 22nd, 2020. Normal countries are not marked, infected are red. The opacity indicates the count of infected humans relative to other countries.";
         }
 
         public string getDifferences() {
