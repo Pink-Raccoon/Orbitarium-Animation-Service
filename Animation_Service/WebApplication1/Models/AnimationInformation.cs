@@ -10,5 +10,7 @@ namespace WebApplication1.Models
         public string AnimationKey { get; set; }
         public string AnimationName { get; set; }
         public string AnimationDescription { get; set; }
+        public string InitUri { get; set; }
+        public string RunCommand { get; set; }
     }
 }
