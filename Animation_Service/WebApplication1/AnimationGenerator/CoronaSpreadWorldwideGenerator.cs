@@ -103,12 +103,6 @@ namespace WebApplication1.AnimationGenerator
                     {
                         polygon.Paint = false;
                     }
-                } else
-                {
-                    polygon.StrokeColor = NO_INFO_COLOR;
-                    polygon.FillColor = NO_INFO_COLOR;
-                    polygon.FillOpacity = 0.2;
-                    polygon.Paint = true;
                 }
                 //Debug line
                 //if (countryBorder.Key.Equals("Switzerland")){
