@@ -23,7 +23,7 @@ namespace WebApplication1.Controller
             return animationService.GetAnimationsSummary();
         }
 
-        // GET api/<controller>/zimbabwe
+        // GET api/<controller>?key=<key>
         public string Get(string key)
         {
             switch (key) {
