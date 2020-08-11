@@ -99,21 +99,35 @@ namespace WebApplication1.Imports
             {
                 Dictionary<string, int> stateInfections = importStatesForDate(date);
                 int yesterdayInfectionCount;
+                // pure estimation for active infection count! we do not know the actual active infections count per US state!
+                int newInfectionsTwentyDaysAgo;
+                int yesterdayActiveCount;
 
                 DateTime yesterday = date.AddDays(-1);
+                DateTime twentyDaysAgo = date.AddDays(-20);
                 DateCountryInfection dateStateInformation;
 
                 foreach (KeyValuePair<string, int> stateInfection in stateInfections)
                 {
                     yesterdayInfectionCount = 0;
+                    yesterdayActiveCount = 0;
                     if (coronaInformation.Contains(yesterday))
                     {
                         Dictionary<string, DateCountryInfection> a = (Dictionary<string, DateCountryInfection>)coronaInformation[yesterday];
                         DateCountryInfection b = a[stateInfection.Key];
                         yesterdayInfectionCount = b.ConfirmedInfections;
+                        yesterdayActiveCount = b.Active;
+                    }
+                    newInfectionsTwentyDaysAgo = 0;
+                    if (coronaInformation.Contains(twentyDaysAgo)) {
+                        Dictionary<string, DateCountryInfection> a = (Dictionary<string, DateCountryInfection>)coronaInformation[twentyDaysAgo];
+                        DateCountryInfection b = a[stateInfection.Key];
+                        newInfectionsTwentyDaysAgo = b.NewCases;
                     }
 
                     int newInfections = stateInfection.Value - yesterdayInfectionCount;
+                    // pure estimation! we estimate a sickness period of 20 days!
+                    int activeInfections = newInfections + yesterdayActiveCount - newInfectionsTwentyDaysAgo;
                     string state = stateInfection.Key;
                     if (state.Equals("Georgia")) {
                         state = "GeorgiaUS";
@@ -125,7 +139,7 @@ namespace WebApplication1.Imports
                         ConfirmedInfections = stateInfection.Value,
                         Deaths = 0,
                         Recovered = 0,
-                        Active = 0,
+                        Active = activeInfections,
                         NewCases = newInfections,
                         NewDeaths = 0,
                         NewRecovered = 0
