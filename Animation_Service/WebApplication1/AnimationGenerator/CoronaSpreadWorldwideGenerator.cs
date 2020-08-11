@@ -29,21 +29,23 @@ namespace WebApplication1.AnimationGenerator
             var countryPopulations = GetCountryPopulations();
 
             EvaluateHighestInfectionCount(coronaSpread, countryPopulations);
-
+            SetAnimationInformation();
             GenerateAnimationInitialization(countryBorders, coronaSpread, countryPopulations);
             GenerateAnimationUpdates(countryBorders, coronaSpread, countryPopulations);
-            SetAnimationInformation();
             GenerateAnimationInformation();
         }
 
         private void SetAnimationInformation()
         {
             animationInformation = new AnimationInformation();
-            animationInformation.AnimationKey = "corona_spread_worldwide";
-            animationInformation.AnimationName = "Corona Spread Worldwide";
+            //animationInformation.AnimationKey = "corona_spread_worldwide";
+            //animationInformation.AnimationName = "Corona Spread Worldwide";
+            animationInformation.AnimationKey = "corona_spread_active_cases";
+            animationInformation.AnimationName = "Corona Spread Worldwide Active Cases";
             animationInformation.InitUri = "http://localhost:12346/corona_spread/";
             animationInformation.RunCommand = "runAnimation();";
-            animationInformation.AnimationDescription = "This animation displays the spread of the corona virus. In the beginning, it display the corona situation on January 22nd, 2020. Normal countries are not marked, infected are red. The opacity indicates the count of infected humans relative to other countries.";
+            //animationInformation.AnimationDescription = "This animation displays the spread of the corona virus. In the beginning, it display the corona situation on January 22nd, 2020. Normal countries are not marked, infected are red. The opacity indicates the count of infected humans relative to other countries.";
+            animationInformation.AnimationDescription = "This animation displays all active cases of Covid-19 infections for any given day in every tracked country starting on January 22nd, 2020. EXCLAIMER: The active infection count for each US state is estimated! We do not have the exact active infection count per state!";
         }
 
         public string getDifferences() {
@@ -71,7 +73,7 @@ namespace WebApplication1.AnimationGenerator
         //todo: move to AnimationDisplay
         public string GetAnimationInitialization()
         {
-            var destPath = Path.Combine(BASE_DIR, ANIMATIONS_FOLDER, "corona_spread", "corona_spread_init.json");
+            var destPath = Path.Combine(BASE_DIR, ANIMATIONS_FOLDER, "corona_spread_active_cases", "corona_spread_init.json");
             return persistence.ReadFromFile(destPath);
         }
 
@@ -91,7 +93,7 @@ namespace WebApplication1.AnimationGenerator
                 {
                     var countryInformation = countryInformations[countryBorder.Key];
 
-                    double fillOpacity = getFillOpacity(countryInformation.ConfirmedInfections, countryPopulations[countryBorder.Key]);
+                    double fillOpacity = getFillOpacity(countryInformation.Active, countryPopulations[countryBorder.Key]);
                     //string color = getFillColor(countryInformation.NewCases, countryPopulations[countryBorder.Key]);
 
                     if (countryInformation.ConfirmedInfections != 0)
@@ -133,7 +135,7 @@ namespace WebApplication1.AnimationGenerator
                     {
                         var countryInfectionInformation = dayInfection.Value;
 
-                        double fillOpacity = getFillOpacity(countryInfectionInformation.ConfirmedInfections, countryPopulations[countryName]);
+                        double fillOpacity = getFillOpacity(countryInfectionInformation.Active, countryPopulations[countryName]);
                         //string color = getFillColor(countryInfectionInformation.NewCases, countryPopulations[countryName]);
 
                         var polygonUpdate = new PolygonUpdate();
@@ -163,14 +165,14 @@ namespace WebApplication1.AnimationGenerator
 
         private void PersistAnimationUpdates(OrderedDictionary polygonUpdateTimeline)
         {
-            var destPath = Path.Combine(BASE_DIR, ANIMATIONS_FOLDER, "corona_spread", "corona_spread_updates.json");
+            var destPath = Path.Combine(BASE_DIR, ANIMATIONS_FOLDER, animationInformation.AnimationKey, "corona_spread_updates.json");
             var serialized = JsonConvert.SerializeObject(polygonUpdateTimeline, Formatting.None);
             persistence.SaveToFile(destPath, serialized);
         }
 
         private void PersistInitalization(Dictionary<string, Polygon> mapsObjects)
         {
-            var destPath = Path.Combine(BASE_DIR, ANIMATIONS_FOLDER, "corona_spread", "corona_spread_init.json");
+            var destPath = Path.Combine(BASE_DIR, ANIMATIONS_FOLDER, animationInformation.AnimationKey, "corona_spread_init.json");
             var serialized = JsonConvert.SerializeObject(mapsObjects, Formatting.None);
             persistence.SaveToFile(destPath, serialized);
         }
@@ -226,7 +228,7 @@ namespace WebApplication1.AnimationGenerator
                     var countryName = dayInfection.Key;
                     var countryInfectionInformation = dayInfection.Value;
 
-                    double newCases = Convert.ToDouble(countryInfectionInformation.ConfirmedInfections);
+                    double newCases = Convert.ToDouble(countryInfectionInformation.Active);
                     CountryPopulation info = countryPopulations[countryName];
                     double population = Convert.ToDouble(info.Population);
                     double relNewCases = newCases / population;
