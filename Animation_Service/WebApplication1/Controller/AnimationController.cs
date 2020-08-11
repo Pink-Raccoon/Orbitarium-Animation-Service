@@ -52,34 +52,22 @@ namespace WebApplication1.Controller
                 }
             } else if (action.ToLower().Equals("get_init"))
             {
-                if (animationName.ToLower().Equals("corona_spread"))
-                {
-                    var coronaSpread = new CoronaSpreadWorldwideGenerator();
-                    var init = coronaSpread.GetAnimationInitialization();
-                    AnimationDisplay.AnimationDisplay.LoadAnimation();
-                    return init;
-                }  
+                var coronaSpread = new CoronaSpreadWorldwideGenerator();
+                var init = coronaSpread.GetAnimationInitialization(animationName);
+                AnimationDisplay.AnimationDisplay.LoadAnimation(animationName);
+                return init;
             } else if (action.ToLower().Equals("get_update"))
             {
-                if (animationName.ToLower().Equals("corona_spread"))
-                {
-                    return AnimationDisplay.AnimationDisplay.GetAnimationUpdates();
-                }
+                return AnimationDisplay.AnimationDisplay.GetAnimationUpdates();
             } else if (action.ToLower().Equals("start"))
             {
-                if (animationName.ToLower().Equals("corona_spread"))
-                {
-                    AnimationDisplay.AnimationDisplay.Start();
-                    return "started";
-                }
+                AnimationDisplay.AnimationDisplay.Start();
+                return "started";
             }
             else if (action.ToLower().Equals("stop"))
             {
-                if (animationName.ToLower().Equals("corona_spread"))
-                {
-                    AnimationDisplay.AnimationDisplay.Stop();
-                    return "stopped";
-                }
+                AnimationDisplay.AnimationDisplay.Stop();
+                return "stopped";
             }
             return "noop";
         }

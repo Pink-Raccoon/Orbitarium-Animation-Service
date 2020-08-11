@@ -41,11 +41,12 @@ namespace WebApplication1.AnimationGenerator
             //animationInformation.AnimationKey = "corona_spread_worldwide";
             //animationInformation.AnimationName = "Corona Spread Worldwide";
             animationInformation.AnimationKey = "corona_spread_active_cases";
-            animationInformation.AnimationName = "Corona Spread Worldwide Active Cases";
-            animationInformation.InitUri = "http://localhost:12346/corona_spread/";
+            animationInformation.AnimationName = "Corona Spread Active Cases";
+            animationInformation.InitUri = "http://localhost:12346/corona_spread?animation=" + animationInformation.AnimationKey;
+            //animationInformation.InitUri = "http://localhost:12346/corona_spread?animation=" + animationInformation.AnimationKey;
             animationInformation.RunCommand = "runAnimation();";
             //animationInformation.AnimationDescription = "This animation displays the spread of the corona virus. In the beginning, it display the corona situation on January 22nd, 2020. Normal countries are not marked, infected are red. The opacity indicates the count of infected humans relative to other countries.";
-            animationInformation.AnimationDescription = "This animation displays all active cases of Covid-19 infections for any given day in every tracked country starting on January 22nd, 2020. EXCLAIMER: The active infection count for each US state is estimated! We do not have the exact active infection count per state!";
+            animationInformation.AnimationDescription = "This animation displays all active cases of Covid-19 infections for any given day in every tracked country starting on January 22nd, 2020. DISCLAIMER: The active infection count for each US state is estimated! We do not have the exact active infection count per state!";
         }
 
         public string getDifferences() {
@@ -71,9 +72,9 @@ namespace WebApplication1.AnimationGenerator
         
 
         //todo: move to AnimationDisplay
-        public string GetAnimationInitialization()
+        public string GetAnimationInitialization(string animationName)
         {
-            var destPath = Path.Combine(BASE_DIR, ANIMATIONS_FOLDER, "corona_spread_active_cases", "corona_spread_init.json");
+            var destPath = Path.Combine(BASE_DIR, ANIMATIONS_FOLDER, animationName, "corona_spread_init.json");
             return persistence.ReadFromFile(destPath);
         }
 

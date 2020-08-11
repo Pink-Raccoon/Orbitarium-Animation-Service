@@ -23,12 +23,12 @@ namespace WebApplication1.AnimationDisplay
         public static bool IsPlaying { get; set; }
         public static bool Stopped { get; set; }
 
-        public static void LoadAnimation()
+        public static void LoadAnimation(string animationName)
         {
             PersistenceService persistence = new PersistenceService();
             string BASE_DIR = ConfigurationManager.AppSettings["BASE_DIR"];
             string ANIMATIONS_FOLDER = ConfigurationManager.AppSettings["ANIMATIONS_FOLDER"];
-            var srcPath = Path.Combine(BASE_DIR, ANIMATIONS_FOLDER, "corona_spread", "corona_spread_updates.json");
+            var srcPath = Path.Combine(BASE_DIR, ANIMATIONS_FOLDER, animationName, "corona_spread_updates.json");
             var updateString = File.ReadAllText(srcPath);
             OrderedDictionary polygonUpdateTimeline = JsonConvert.DeserializeObject<OrderedDictionary>(updateString);
             var enumerator = polygonUpdateTimeline.GetEnumerator();
