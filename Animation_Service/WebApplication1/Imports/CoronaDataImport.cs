@@ -175,7 +175,7 @@ namespace WebApplication1.Imports
                     var splitted = s.Split(';');
                     // [6]: state name, [11]: 1/22/20 ...
                     var currentState = splitted[6];
-                    Console.WriteLine(currentState);
+                    
                     if (state.Equals(""))
                     {
                         state = currentState;
