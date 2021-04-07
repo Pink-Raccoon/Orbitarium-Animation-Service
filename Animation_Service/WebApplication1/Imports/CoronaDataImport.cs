@@ -165,17 +165,17 @@ namespace WebApplication1.Imports
                 string[] header;
                 string s;
                 //skip csv header
-                header = sr.ReadLine().Split(',');
+                header = sr.ReadLine().Split(';');
                 string state = "";
                 int infectionCount = 0;
 
                 // UID 84080001 and below does not interest us!
                 while (!(s = sr.ReadLine()).StartsWith("84080002"))
                 {
-                    var splitted = s.Split(',');
+                    var splitted = s.Split(';');
                     // [6]: state name, [11]: 1/22/20 ...
                     var currentState = splitted[6];
-
+                    Console.WriteLine(currentState);
                     if (state.Equals(""))
                     {
                         state = currentState;
@@ -207,7 +207,7 @@ namespace WebApplication1.Imports
 
                 if (parsedDate.Equals(date))
                 {
-                    return infectionCount + Convert.ToInt32(splitted[i + 2]);
+                    return infectionCount + Convert.ToInt32(splitted[i]);
                 }
             }
             return 0;
