@@ -232,7 +232,7 @@ namespace WebApplication1.Imports
                             Convert.ToInt16(dateSplitted[2])
                         );
 
-                    if (splitted[1].Equals("China") && parsedDate.Equals(date)) {
+                    if (splitted[1].Equals("China") && parsedDate.Equals(date) && !splitted[0].Equals("Unknown")) {
                         var dateProvinceInformation = new DateCountryInfection
                         {
                             Date = date,
