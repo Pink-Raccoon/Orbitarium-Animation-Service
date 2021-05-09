@@ -170,7 +170,7 @@ namespace WebApplication1.Imports
                 int infectionCount = 0;
 
                 // UID 84080001 and below does not interest us!
-                while (!(s = sr.ReadLine()).StartsWith("84080002"))
+                while (!(s = sr.ReadLine()).StartsWith("84070003"))
                 {
                     var splitted = s.Split(';');
                     // [6]: state name, [11]: 1/22/20 ...
